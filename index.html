@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>AUXILIO FFH4X PIETRO VIP</title>
+    <style>
+        :root { --gold: #ffcc00; --bg: #111218; --sidebar: #0d0e13; }
+        body { background: #000; color: #fff; font-family: 'Segoe UI', sans-serif; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; }
+
+        #login-screen { width: 380px; background: var(--bg); border: 2px solid var(--gold); border-radius: 20px; padding: 40px 20px; text-align: center; }
+        .input-key { width: 90%; padding: 15px; background: #000; border: 1px solid var(--gold); color: #fff; border-radius: 12px; text-align: center; margin-bottom: 20px; outline: none; }
+
+        .panel { width: 520px; background: var(--bg); border: 2px solid var(--gold); border-radius: 25px; display: none; box-shadow: 0 0 40px rgba(255, 204, 0, 0.15); overflow: hidden; position: relative; }
+        .panel-header { padding: 25px 0; text-align: center; color: var(--gold); font-weight: 800; font-size: 20px; text-transform: uppercase; }
+        .main-container { display: flex; border-top: 1px solid #222; min-height: 380px; }
+
+        .sidebar { width: 95px; background: var(--sidebar); display: flex; flex-direction: column; gap: 15px; padding-top: 20px; border-right: 1px solid #222; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; opacity: 0.5; cursor: pointer; }
+        .nav-item.active { opacity: 1; }
+        .icon-box { width: 50px; height: 50px; border: 1px solid #333; border-radius: 14px; display: flex; justify-content: center; align-items: center; font-size: 22px; margin-bottom: 5px; }
+        .nav-item.active .icon-box { border-color: var(--gold); }
+        .nav-item span { font-size: 10px; color: var(--gold); font-weight: bold; }
+
+        .content { flex: 1; padding: 30px; display: none; }
+        .content.active { display: block; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .check { display: flex; align-items: center; gap: 10px; font-size: 13px; }
+        .check input { accent-color: var(--gold); width: 18px; height: 18px; }
+        
+        select { width: 100%; background: #000; border: 2px solid var(--gold); color: #fff; padding: 12px; border-radius: 10px; margin: 10px 0 20px; }
+        .btn-yellow { width: 100%; padding: 15px; background: var(--gold); color: #000; border: none; font-weight: 900; border-radius: 12px; cursor: pointer; text-transform: uppercase; }
+        #error { color: #ff4444; font-size: 12px; margin-top: 15px; display: none; }
+    </style>
+</head>
+<body>
+
+    <div id="login-screen">
+        <div style="color:var(--gold); font-weight:900; margin-bottom:25px; font-size:22px;">SISTEMA MAGNATA</div>
+        <input type="text" id="keyInput" class="input-key" placeholder="DIGITE SUA KEY">
+        <button class="btn-yellow" onclick="verifyKey()">ENTRAR NO PAINEL</button>
+        <p id="error">KEY INVÁLIDA OU EXPIRADA!</p>
+    </div>
+
+    <div id="main-panel" class="panel">
+        <div class="panel-header">AUXILIO FFH4X</div>
+        <div class="main-container">
+            <div class="sidebar">
+                <div class="nav-item active"><div class="icon-box">⚡</div><span>perform</span></div>
+                <div class="nav-item"><span>...</span></div>
+            </div>
+
+            <div class="content active">
+                <div class="grid">
+                    <label class="check"><input type="checkbox"> 120 FPS</label>
+                    <label class="check"><input type="checkbox"> 144 HZ</label>
+                    <label class="check"><input type="checkbox"> Otimização</label>
+                </div>
+                <p style="color:var(--gold); font-size:11px; margin-top:20px;">Versão do Jogo:</p>
+                <select><option>Free Fire Normal</option></select>
+                <button class="btn-yellow" onclick="alert('Buscando Jogo...')">ABRIR JOGO</button>
+                <p id="userStatus" style="font-size: 10px; color: #555; margin-top: 15px;"></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function verifyKey() {
+            const input = document.getElementById('keyInput').value;
+            const db = JSON.parse(localStorage.getItem('magnata_keys') || '[]');
+            const found = db.find(k => k.key === input);
+
+            if (found) {
+                const agora = Date.now();
+                
+                // Verifica se a key expirou (se não for Permanente)
+                if (!found.isPerm && agora > found.expiration) {
+                    alert("Sua Key expirou! Entre em contato com o Admin.");
+                    return;
+                }
+
+                document.getElementById('login-screen').style.display = 'none';
+                document.getElementById('main-panel').style.display = 'block';
+                document.getElementById('userStatus').innerText = `Usuário: ${found.user} | Status: Ativo`;
+            } else {
+                document.getElementById('error').style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html>
